@@ -1,0 +1,351 @@
+
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>API Documentation</title>
+            <style>
+                :root {
+                    --bg-color: #f8f9fa;
+                    --text-main: #2d3748;
+                    --text-muted: #718096;
+                    --border-color: #e2e8f0;
+                    --header-bg: #ffffff;
+                    --code-bg: #1e1e1e;
+                    --tag-bg: #edf2f7;
+                    --tag-text: #4a5568;
+                }
+                
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                
+                body { 
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+                    background-color: var(--bg-color); 
+                    color: var(--text-main); 
+                    line-height: 1.6;
+                }
+
+                header {
+                    background-color: var(--header-bg);
+                    border-bottom: 1px solid var(--border-color);
+                    padding: 16px 40px;
+                    display: flex;
+                    align-items: center;
+                    position: sticky;
+                    top: 0;
+                    z-index: 100;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                }
+
+                .brand {
+                    font-size: 1.25rem;
+                    font-weight: 800;
+                    color: #2b6cb0;
+                    letter-spacing: -0.5px;
+                }
+
+                main {
+                    max-width: 1000px;
+                    margin: 40px auto;
+                    padding: 0 20px;
+                }
+
+                h1 { 
+                    font-size: 1.8rem;
+                    margin-bottom: 8px;
+                    color: var(--text-main);
+                }
+
+                .subtitle {
+                    color: var(--text-muted);
+                    margin-bottom: 30px;
+                    font-size: 0.95rem;
+                }
+
+                details.tag-group {
+                    background: white;
+                    border-radius: 8px;
+                    margin-bottom: 16px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    border: 1px solid var(--border-color);
+                    overflow: hidden;
+                }
+
+                summary.tag-title {
+                    padding: 16px 24px;
+                    font-size: 1.15rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    background-color: #f7fafc;
+                    display: flex;
+                    align-items: center;
+                    user-select: none;
+                    list-style: none;
+                    border-bottom: 1px solid transparent;
+                }
+
+                summary.tag-title::-webkit-details-marker {
+                    display: none;
+                }
+
+                details[open] summary.tag-title {
+                    border-bottom-color: var(--border-color);
+                }
+
+                summary.tag-title::before {
+                    content: '▶';
+                    font-size: 0.8rem;
+                    margin-right: 12px;
+                    color: var(--text-muted);
+                    transition: transform 0.2s ease-in-out;
+                }
+
+                details[open] summary.tag-title::before {
+                    transform: rotate(90deg);
+                }
+
+                .route-count {
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: var(--text-muted);
+                    margin-left: 12px;
+                    background: var(--tag-bg);
+                    padding: 2px 10px;
+                    border-radius: 12px;
+                }
+
+                .tag-content {
+                    padding: 24px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .route-card {
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+
+                .route-header {
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 16px;
+                    background-color: #f8f9fa;
+                    border-bottom: 1px solid var(--border-color);
+                    gap: 16px;
+                }
+
+                .route-body {
+                    padding: 20px;
+                }
+
+                .summary-text {
+                    font-size: 0.95rem;
+                    color: var(--text-main);
+                    margin-bottom: 20px;
+                    font-weight: 500;
+                }
+
+                .payload-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                }
+
+                .payload-section {
+                    background: var(--code-bg);
+                    border-radius: 6px;
+                    overflow: hidden;
+                }
+
+                .payload-title {
+                    background: #2d3748;
+                    color: #e2e8f0;
+                    padding: 8px 16px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    border-bottom: 1px solid #4a5568;
+                }
+
+                code { 
+                    font-size: 1rem; 
+                    font-weight: 600; 
+                    color: #e53e3e; 
+                }
+
+                pre { 
+                    color: #e2e8f0; 
+                    padding: 16px; 
+                    font-size: 0.9rem; 
+                    margin: 0; 
+                    white-space: pre-wrap; 
+                    word-wrap: break-word; 
+                    font-family: 'Fira Code', Consolas, Monaco, monospace;
+                }
+
+                .method { 
+                    padding: 6px 12px; 
+                    border-radius: 4px; 
+                    font-weight: 700; 
+                    font-size: 0.85rem; 
+                    color: white; 
+                    display: inline-block; 
+                    width: 75px; 
+                    text-align: center; 
+                    letter-spacing: 0.5px;
+                }
+                .get { background: #3182ce; }
+                .post { background: #38a169; }
+                .put { background: #d69e2e; }
+                .patch { background: #805ad5; }
+                .delete { background: #e53e3e; }
+            </style>
+        </head>
+        <body>
+            <header>
+                <div class="brand">api-docgen</div>
+            </header>
+            
+            <main>
+                <h1>API Routes Reference</h1>
+                <p class="subtitle">Automatically generated documentation for your backend API services.</p>
+                
+                <div class="api-container">
+                    
+                <details class="tag-group" open>
+                    <summary class="tag-title">
+                        Users <span class="route-count">3 endpoints</span>
+                    </summary>
+                    <div class="tag-content">
+                        
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method get">GET</span>
+                            <code>/api/users/me</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">Get user's information by id</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>None</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { success: true, data: { id: number, nickname: string, status: string } }</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method post">POST</span>
+                            <code>/api/users/register</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">Post user's information</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>body { name: string, email: string, nickname: string, password: string }</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>201 { success: true, data: { id: number, nickname: string } }
+400 MISSING_REQUIRED_FIELDS
+409 DUPLICATED_EMAIL | DUPLICATED_NICKNAME</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method post">POST</span>
+                            <code>/api/users/login</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">user's login</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>body { email: string, password: string }</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { success: true, data: { token: string } }
+400 MISSING_REQUIRED_FIELDS
+401 INVALID_CREDENTIALS
+403 ACCOUNT_INACTIVE</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    </div>
+                </details>
+            
+                <details class="tag-group" open>
+                    <summary class="tag-title">
+                        System <span class="route-count">2 endpoints</span>
+                    </summary>
+                    <div class="tag-content">
+                        
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method get">GET</span>
+                            <code>/api-docs</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">Serve API documentation HTML</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>None</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { type: text/html }</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method get">GET</span>
+                            <code>/health</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">Check server status</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>None</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { status: string }</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    </div>
+                </details>
+            
+                </div>
+            </main>
+        </body>
+        </html>
+        

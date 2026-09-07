@@ -1,0 +1,55 @@
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import path from 'path';
+
+import errorHandler from './middlewares/errorHandler.js';
+
+// Import routers
+import usersRouter from './api/users/user.routes.js';
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 8080;
+
+// CORS configuration
+const corsOptions = {
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+
+// Parse JSON payloads
+app.use(express.json());
+
+// Setup routers
+app.use('/api/users', usersRouter);
+
+/**
+ * @api-docgen
+ * @tag System
+ * @summary Serve API documentation HTML
+ * @res 200 { type: text/html }
+ */
+app.get('/api-docs', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'api-docs.html'));
+});
+
+/**
+ * @api-docgen
+ * @tag System
+ * @summary Check server status
+ * @res 200 { status: string }
+ */
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
+app.use(errorHandler);
+
+// Start server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
