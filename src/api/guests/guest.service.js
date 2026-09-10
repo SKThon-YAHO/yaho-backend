@@ -1,27 +1,35 @@
 import crypto from 'crypto';
 import * as guestRepo from './guest.repository.js';
 
-const CountUpUsage = async (toilet_code, UUID) => {
-    let newUUID;
+const LoggingUsage = async (toilet_code, uuid) => {
+    let newUuid;
     let is_valid;
 
-    if (!UUID) {
+    if (!uuid) {
         // 첫 이용이므로 새로운 UUID 생성
-        newUUID = crypto.randomUUID();
+        newUuid = crypto.randomUUID();
 
         is_valid = true;
     }
     else {
-        newUUID = UUID;
+        newUuid = uuid;
 
-        is_valid = await guestRepo.IsValid(toilet_code, UUID);
+        is_valid = await guestRepo.IsValidUsage(toilet_code, uuid);
     }
 
     if (is_valid) {
-        await guestRepo.CountUpUsage(toilet_code);
+        await guestRepo.LoggingUsage(toilet_code, uuid);
     }
 
-    return newUUID;
+    return newUuid;
 };
 
-export { CountUpUsage };
+const LoggingSurvey = async (toilet_code, survey, uuid) => {
+    const is_valid = guestRepo.IsValidSurvey(toilet_code, uuid);
+
+    if (!is_valid) return;
+
+    await guestRepo.LoggingSurvey(toilet_code, survey, uuid);
+}
+
+export { LoggingUsage, LoggingSurvey };

@@ -1,8 +1,8 @@
 import * as guestService from './guest.service.js';
 
-const CountUpUsage = async (req, res, next) => {
+const LoggingUsage = async (req, res, next) => {
     try {
-        const { toilet_code, UUID } = req.body;
+        const { toilet_code, uuid } = req.body;
 
         if (!toilet_code) {
             const error = new Error('Missing required fields.');
@@ -11,20 +11,31 @@ const CountUpUsage = async (req, res, next) => {
             throw error;
         }
 
-        const newUUID = guestService.CountUpUsage(toilet_code, UUID);
+        const newuuid = guestService.LoggingUsage(toilet_code, uuid);
 
-        return res.status(200).json({ success: true, data: {UUID: newUUID} });
+        return res.status(200).json({ success: true, data: {uuid: newuuid} });
     } catch (error) {
         next(error);
     }
 };
 
-const InsertSurvey = async (req, res, next) => {
+const LoggingSurvey = async (req, res, next) => {
     try {
+        const { toilet_code, survey, uuid } = req.body;
+
+        if ( !toilet_code || !survey || !uuid ) {
+            const error = new Error('Missing required fields.');
+            error.status = 400;
+            error.code = 'MISSING_REQUIRED_FIELDS';
+            throw error;
+        }
+
+        await guestService.LoggingSurvey(toilet_code, survey, uuid);
+
         return res.status(200).json({ success: true });
     } catch (error) {
         next(error);
     }
 }
 
-export { CountUpUsage, InsertSurvey };
+export { LoggingUsage, LoggingSurvey };
