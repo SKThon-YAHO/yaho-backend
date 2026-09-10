@@ -7,6 +7,7 @@ import errorHandler from './middlewares/errorHandler.js';
 
 // Import routers
 import usersRouter from './api/users/user.routes.js';
+import guestsRouter from './api/guests/guest.routes.js';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(express.json());
 
 // Setup routers
 app.use('/api/users', usersRouter);
+app.use('/api/guest', guestsRouter);
 
 /**
  * @api-docgen
