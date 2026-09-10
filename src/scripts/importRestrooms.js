@@ -44,7 +44,6 @@ function mapItem(item) {
     status: 'active', // active/suspended 두 값만 허용 — import되는 데이터는 기본 active로 시작
     urinal_count: maleUrinal,
     stall_count: maleToilet + femaleToilet,
-    usage_count: 0, // API에는 없는 필드, 초기값 0
   };
 }
 
@@ -54,7 +53,7 @@ async function insertBatch(client, rows) {
   const values = [];
   const placeholders = rows
     .map((row, i) => {
-      const base = i * 8;
+      const base = i * 7;
       values.push(
         row.local_code,
         row.toilet_code,
@@ -62,15 +61,14 @@ async function insertBatch(client, rows) {
         row.stall_count,
         row.name,
         row.locate,
-        row.status,
-        row.usage_count
+        row.status
       );
-      return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5}, $${base + 6}, $${base + 7}, $${base + 8})`;
+      return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5}, $${base + 6}, $${base + 7})`;
     })
     .join(', ');
 
   const query = `
-    INSERT INTO toilets (local_code, toilet_code, urinal_count, stall_count, name, locate, status, usage_count)
+    INSERT INTO toilets (local_code, toilet_code, urinal_count, stall_count, name, locate, status)
     VALUES ${placeholders}
     ON CONFLICT (toilet_code) DO UPDATE SET
   local_code = COALESCE(toilets.local_code, EXCLUDED.local_code),
@@ -81,7 +79,6 @@ async function insertBatch(client, rows) {
   updated_at = now();
     -- local_code, status는 재import 시 덮어쓰지 않음 (관리자 배정/상태 값을 보존)
   `;
-  // usage_count는 upsert 시 덮어쓰지 않음 (누적값이라 기존 값 보존)
 
   await client.query(query, values);
 }
