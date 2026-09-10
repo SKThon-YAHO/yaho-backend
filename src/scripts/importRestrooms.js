@@ -37,7 +37,7 @@ function mapItem(item) {
   const maleUrinal = parseInt(item.MALE_URNL_CNT || '0', 10);
 
   return {
-    local_code: null, // local_manager FK 제약 때문에 실제 가입 관리자가 배정되기 전까진 null
+    local_code: item.OPN_ATMY_GRP_CD, // local_manager FK 제약 때문에 실제 가입 관리자가 배정되기 전까진 null
     toilet_code: item.MNG_NO,
     name: item.RSTRM_NM || '이름 미상',
     locate: item.LCTN_ROAD_NM_ADDR || item.LCTN_LOTNO_ADDR || '주소 미상',
@@ -73,11 +73,12 @@ async function insertBatch(client, rows) {
     INSERT INTO toilets (local_code, toilet_code, urinal_count, stall_count, name, locate, status, usage_count)
     VALUES ${placeholders}
     ON CONFLICT (toilet_code) DO UPDATE SET
-      name = EXCLUDED.name,
-      locate = EXCLUDED.locate,
-      urinal_count = EXCLUDED.urinal_count,
-      stall_count = EXCLUDED.stall_count,
-      updated_at = now();
+  local_code = COALESCE(toilets.local_code, EXCLUDED.local_code),
+  name = EXCLUDED.name,
+  locate = EXCLUDED.locate,
+  urinal_count = EXCLUDED.urinal_count,
+  stall_count = EXCLUDED.stall_count,
+  updated_at = now();
     -- local_code, status는 재import 시 덮어쓰지 않음 (관리자 배정/상태 값을 보존)
   `;
   // usage_count는 upsert 시 덮어쓰지 않음 (누적값이라 기존 값 보존)
