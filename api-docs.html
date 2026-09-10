@@ -251,7 +251,7 @@
             
                 <details class="tag-group" open>
                     <summary class="tag-title">
-                        Users <span class="route-count">1 endpoints</span>
+                        Users <span class="route-count">5 endpoints</span>
                     </summary>
                     <div class="tag-content">
                         
@@ -261,7 +261,7 @@
                             <code>/api/users/me</code>
                         </div>
                         <div class="route-body">
-                            <div class="summary-text">Get user's information by id</div>
+                            <div class="summary-text">Get user's information by local_code</div>
                             
                             <div class="payload-container">
                                 <div class="payload-section">
@@ -270,7 +270,93 @@
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
-                                    <pre>200 { success: true, data: { local_code: string, num_toilet: string, role: string } }</pre>
+                                    <pre>200 { success: true, data: { local_code: string, num_toilet: string, role: string } }
+404 LOCAL_CODE_NOT_FOUND</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method get">GET</span>
+                            <code>/api/users/dashboard</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">Get dashboard stats for manager's toilets (cleaning-needed badges)</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>None</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { success: true, data: [{ toilet_code, name, locate, total_count, dirty_count, supply_count, needsCleaning }] }</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method get">GET</span>
+                            <code>/api/users/toilets</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">Get list of toilets managed by this local_code</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>None</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { success: true, data: [{ toilet_code, name, locate, urinal_count, stall_count, status, last_cleaning }] }</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method get">GET</span>
+                            <code>/api/users/toilets/usage</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">Get visit count per toilet for a given period</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>query { period: "day" | "week" | "month" } (기본값 day)</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { success: true, data: [{ toilet_code, name, visit_count }] }</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method post">POST</span>
+                            <code>/api/users/toilets/:toiletCode/cleaning</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">Add a cleaning log entry for one of the manager's toilets</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>body { cleaning_type: number }</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>201 { success: true, data: { id, local_code, toilet_code, cleaning_type, created_at } }
+403 NO_PERMISSION</pre>
                                 </div>
                             </div>
                         </div>
@@ -291,16 +377,16 @@
                             <code>/api/guest/usage</code>
                         </div>
                         <div class="route-body">
-                            <div class="summary-text">화장실 이용량 카운트, 로컬 스토리지에 저장된 UUID가 없다면 쿼리 비워서 보내고, 반환된 UUID를 로컬스토리지에 저장</div>
+                            <div class="summary-text">화장실 이용량 카운트, 로컬 스토리지에 저장된 uuid가 없다면 쿼리 비워서 보내고, 반환된 uuid를 로컬스토리지에 저장 및 다음 요청 때 붙여서</div>
                             
                             <div class="payload-container">
                                 <div class="payload-section">
                                     <div class="payload-title">Request</div>
-                                    <pre>body { toilet_code: string, UUID: string(nullable) }</pre>
+                                    <pre>body { toilet_code: string, uuid: string(nullable) }</pre>
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
-                                    <pre>200 { success: true, data: { UUID: string } }
+                                    <pre>200 { success: true, data: { uuid: string } }
 400 MISSING_REQUIRED_FIELDS</pre>
                                 </div>
                             </div>
@@ -318,7 +404,7 @@
                             <div class="payload-container">
                                 <div class="payload-section">
                                     <div class="payload-title">Request</div>
-                                    <pre>body { toilet_code: string, survey: int }</pre>
+                                    <pre>body { toilet_code: string, survey: int, uuid: string }</pre>
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
