@@ -2,7 +2,8 @@ import * as guestService from './guest.service.js';
 
 const LoggingUsage = async (req, res, next) => {
     try {
-        const { toilet_code, uuid } = req.body;
+        const { uuid } = req.body;
+        const { toilet_code } = req.params;
 
         if (!toilet_code) {
             const error = new Error('Missing required fields.');
@@ -21,7 +22,8 @@ const LoggingUsage = async (req, res, next) => {
 
 const LoggingSurvey = async (req, res, next) => {
     try {
-        const { toilet_code, survey, uuid } = req.body;
+        const { survey, uuid } = req.body;
+        const { toilet_code } = req.params;
 
         if ( !toilet_code || !survey || !uuid ) {
             const error = new Error('Missing required fields.');

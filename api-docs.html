@@ -352,7 +352,7 @@
                     <div class="route-card">
                         <div class="route-header">
                             <span class="method post">POST</span>
-                            <code>/api/guest/usage</code>
+                            <code>/api/guest/:toilet_code/usage</code>
                         </div>
                         <div class="route-body">
                             <div class="summary-text">화장실 이용량 카운트, 로컬 스토리지에 저장된 uuid가 없다면 쿼리 비워서 보내고, 반환된 uuid를 로컬스토리지에 저장 및 다음 요청 때 붙여서</div>
@@ -360,7 +360,7 @@
                             <div class="payload-container">
                                 <div class="payload-section">
                                     <div class="payload-title">Request</div>
-                                    <pre>body { toilet_code: string, uuid: string(nullable) }</pre>
+                                    <pre>body { uuid: string(nullable) }</pre>
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
@@ -374,7 +374,7 @@
                     <div class="route-card">
                         <div class="route-header">
                             <span class="method post">POST</span>
-                            <code>/api/guest/survey</code>
+                            <code>/api/guest/:toilet_code/survey</code>
                         </div>
                         <div class="route-body">
                             <div class="summary-text">설문 라우트 survey는 아무것도 체크 안 함 -> 0, 청결도만 체크 -> 1, 비품만 체크 -> 2, 전부 체크 -> 3 으로 세팅</div>
@@ -382,7 +382,7 @@
                             <div class="payload-container">
                                 <div class="payload-section">
                                     <div class="payload-title">Request</div>
-                                    <pre>body { toilet_code: string, survey: int, uuid: string }</pre>
+                                    <pre>body { survey: int, uuid: string }</pre>
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
