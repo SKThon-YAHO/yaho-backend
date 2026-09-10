@@ -10,8 +10,6 @@ const getProfile = async (local_code) => {
     return data;
 };
 
-local_code, name, num_toilet, password, role
-
 const login = async (local_code, password) => {
     const user = await userRepo.findByLocalCode(local_code);
 
