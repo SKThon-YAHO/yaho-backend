@@ -2,7 +2,7 @@ import * as guestService from './guest.service.js';
 
 const CountUpUsage = async (req, res, next) => {
     try {
-        const { toilet_code, UUID } = req.query;
+        const { toilet_code, UUID } = req.body;
 
         if (!toilet_code) {
             const error = new Error('Missing required fields.');
@@ -19,4 +19,12 @@ const CountUpUsage = async (req, res, next) => {
     }
 };
 
-export { CountUpUsage };
+const InsertSurvey = async (req, res, next) => {
+    try {
+        return res.status(200).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export { CountUpUsage, InsertSurvey };
