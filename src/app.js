@@ -6,6 +6,7 @@ import path from 'path';
 import errorHandler from './middlewares/errorHandler.js';
 
 // Import routers
+import authRouter from './api/auth/auth.routes.js';
 import usersRouter from './api/users/user.routes.js';
 import guestsRouter from './api/guests/guest.routes.js';
 
@@ -26,6 +27,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Setup routers
+app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/guest', guestsRouter);
 
