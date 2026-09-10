@@ -36,6 +36,6 @@ const LoggingSurvey = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 export { LoggingUsage, LoggingSurvey };

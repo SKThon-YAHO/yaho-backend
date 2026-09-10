@@ -31,8 +31,4 @@ const getUsage = async (local_code, period) => {
     return userRepo.getUsage(local_code, period);
 };
 
-const addCleaningLog = async ({ local_code, toiletCode, cleaning_type }) => {
-    return userRepo.addCleaningLog(local_code, toiletCode, cleaning_type);
-};
-
-export { getProfile, getDashboard, getMyToilets, getUsage, addCleaningLog };
+export { getProfile, getDashboard, getMyToilets, getUsage };

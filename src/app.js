@@ -9,6 +9,7 @@ import errorHandler from './middlewares/errorHandler.js';
 import authRouter from './api/auth/auth.routes.js';
 import usersRouter from './api/users/user.routes.js';
 import guestsRouter from './api/guests/guest.routes.js';
+import manageRouter from './api/manage/manage.routes.js';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/guest', guestsRouter);
+app.use('/api/manage', manageRouter);
 
 /**
  * @api-docgen

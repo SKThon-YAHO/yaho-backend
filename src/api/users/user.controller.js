@@ -54,18 +54,4 @@ const getUsage = async (req, res, next) => {
     }
 };
 
-const addCleaningLog = async (req, res, next) => {
-    try {
-        const local_code = req.user.local_code;
-        const { toiletCode } = req.params;
-        const { cleaning_type } = req.body;
-
-        const log = await userService.addCleaningLog({ local_code, toiletCode, cleaning_type });
-
-        return res.status(201).json({ success: true, data: log });
-    } catch (error) {
-        next(error);
-    }
-};
-
-export { getMyProfile, getDashboard, getMyToilets, getUsage, addCleaningLog };
+export { getMyProfile, getDashboard, getMyToilets, getUsage };

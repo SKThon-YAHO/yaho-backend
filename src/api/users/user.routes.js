@@ -38,14 +38,4 @@ router.get('/toilets', verifyToken, userController.getMyToilets);
  */
 router.get('/toilets/usage', verifyToken, userController.getUsage);
 
-/**
- * @api-docgen
- * @tag Users
- * @summary Add a cleaning log entry for one of the manager's toilets
- * @req body { cleaning_type: number }
- * @res 201 { success: true, data: { id, local_code, toilet_code, cleaning_type, created_at } }
- * @res 403 NO_PERMISSION
- */
-router.post('/toilets/:toiletCode/cleaning', verifyToken, userController.addCleaningLog);
-
 export default router;
