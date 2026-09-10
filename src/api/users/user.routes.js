@@ -12,16 +12,4 @@ const router = express.Router();
  */
 router.get('/me', verifyToken, userController.getMyProfile);
 
-/**
- * @api-docgen
- * @tag Users
- * @summary user's login
- * @req body { local_code: string, password: string }
- * @res 200 { success: true, data: { token: string } }
- * @res 400 MISSING_REQUIRED_FIELDS
- * @res 401 INVALID_CREDENTIALS
- * @res 403 ACCOUNT_DELETED
- */
-router.post('/login', userController.login);
-
 export default router;
