@@ -251,7 +251,7 @@
             
                 <details class="tag-group" open>
                     <summary class="tag-title">
-                        Users <span class="route-count">2 endpoints</span>
+                        Users <span class="route-count">1 endpoints</span>
                     </summary>
                     <div class="tag-content">
                         
@@ -271,30 +271,6 @@
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
                                     <pre>200 { success: true, data: { local_code: string, num_toilet: string, role: string } }</pre>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="route-card">
-                        <div class="route-header">
-                            <span class="method post">POST</span>
-                            <code>/api/users/login</code>
-                        </div>
-                        <div class="route-body">
-                            <div class="summary-text">user's login</div>
-                            
-                            <div class="payload-container">
-                                <div class="payload-section">
-                                    <div class="payload-title">Request</div>
-                                    <pre>body { local_code: string, password: string }</pre>
-                                </div>
-                                <div class="payload-section">
-                                    <div class="payload-title">Response</div>
-                                    <pre>200 { success: true, data: { token: string } }
-400 MISSING_REQUIRED_FIELDS
-401 INVALID_CREDENTIALS
-403 ACCOUNT_DELETED</pre>
                                 </div>
                             </div>
                         </div>
