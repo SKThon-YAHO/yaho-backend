@@ -25,7 +25,7 @@ const LoggingUsage = async (toilet_code, uuid) => {
     await pool.query(query, [toilet_code, uuid || null]);
 }
 
-const IsValidSurvey = async (toilet_code, uuid) => {
+const IsValidSurvey = async (toilet_code, survey, uuid) => {
     const query = `
         SELECT EXISTS (
             SELECT 1
