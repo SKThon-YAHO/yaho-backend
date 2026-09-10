@@ -18,14 +18,14 @@ const LoggingUsage = async (toilet_code, uuid) => {
     }
 
     if (is_valid) {
-        await guestRepo.LoggingUsage(toilet_code, uuid);
+        await guestRepo.LoggingUsage(toilet_code, newUuid);
     }
 
     return newUuid;
 };
 
 const LoggingSurvey = async (toilet_code, survey, uuid) => {
-    const is_valid = guestRepo.IsValidSurvey(toilet_code, uuid);
+    const is_valid = await guestRepo.IsValidSurvey(toilet_code, survey, uuid);
 
     if (!is_valid) return;
 

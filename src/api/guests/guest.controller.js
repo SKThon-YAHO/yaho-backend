@@ -12,7 +12,7 @@ const LoggingUsage = async (req, res, next) => {
             throw error;
         }
 
-        const newuuid = guestService.LoggingUsage(toilet_code, uuid);
+        const newuuid = await guestService.LoggingUsage(toilet_code, uuid);
 
         return res.status(200).json({ success: true, data: {uuid: newuuid} });
     } catch (error) {

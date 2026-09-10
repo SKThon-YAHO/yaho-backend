@@ -20,14 +20,14 @@ const login = async (local_code, password) => {
         throw error;
     }
 
-    if (user.deleted_at !== NULL) {
+    if (user.deleted_at !== null) {
         const error = new Error('Account is deleted.');
         error.status = 403;
         error.code = 'ACCOUNT_DELETED';
         throw error;
     }
 
-    const payload = { local_code: user.local_code, name: user.name };
+    const payload = { local_code: user.local_code, role: user.role };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_IN || '1d'
