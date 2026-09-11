@@ -37,6 +37,9 @@ const getRandomItem = async (uuid) => {
                 item_number += String(Math.floor(Math.random() * 10));
             }
         }
+        else {
+            item_number = '11';
+        }
         
         await guestRepo.LoggingDraw(selected_item, item_number, uuid);
 
