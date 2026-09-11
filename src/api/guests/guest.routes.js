@@ -21,7 +21,7 @@ router.post('/:toilet_code/usage', guestController.LoggingUsage);
  * @req     survey: { 
  * @req         clean: { toilet: bool, urinal: bool, sink: bool, floor: bool },
  * @req         break: { toilet: bool, urinal: bool, sink: bool, door: bool },
- * @req         item: { soap: bool, paper: bool }
+ * @req         item: { soap: bool, paper: bool, trash: bool }
  * @req     },
  * @req uuid: string }
  * @res 200 { success: true }
