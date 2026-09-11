@@ -47,7 +47,7 @@ const IsValidDraw = async (uuid) => {
             SELECT 1
             FROM draw_log
             WHERE uuid = $1
-              AND created_at >= NOW() - INTERVAL '1 day'
+              AND created_at >= NOW() - INTERVAL '30 minutes'
         ) AS exists
     `;
 
