@@ -24,8 +24,8 @@ const getMyToilets = async (local_code) => {
     return userRepo.getMyToilets(local_code);
 };
 
-const getUsage = async (local_code, period) => {
-    return userRepo.getUsage(local_code, period);
+const getUsage = async (local_code) => {
+    return userRepo.getUsage(local_code);
 };
 
 export { getProfile, getTotalData, getMyToilets, getUsage };

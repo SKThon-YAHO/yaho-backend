@@ -39,8 +39,7 @@ router.get('/toilets', verifyToken, userController.getMyToilets);
 /**
  * @api-docgen
  * @tag Users
- * @summary Get visit count per toilet for a given period
- * @req query { period: "day" | "week" | "month" } (기본값 day)
+ * @summary Get visit count per toilet for daily montly 
  * @res 200 { success: true, data: [{ toilet_code, name, visit_count }] }
  */
 router.get('/toilets/usage', verifyToken, userController.getUsage);

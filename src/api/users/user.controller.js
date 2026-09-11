@@ -39,14 +39,7 @@ const getMyToilets = async (req, res, next) => {
 const getUsage = async (req, res, next) => {
     try {
         const local_code = req.user.local_code;
-        const period = req.query.period || 'day'; // day | week | month, 기본값 day
-         if (!local_code || !period) {
-            const error = new Error('Missing required fields.');
-            error.status = 400;
-            error.code = 'MISSING_REQUIRED_FIELDS';
-            throw error;
-        }
-        const usage = await userService.getUsage(local_code, period);
+        const usage = await userService.getUsage(local_code);
 
         return res.status(200).json({ success: true, data: usage });
     } catch (error) {
