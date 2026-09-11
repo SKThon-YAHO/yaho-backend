@@ -14,6 +14,7 @@ const getProfile = async (local_code) => {
 };
 
 const getTotalData = async (local_code) => {
+    return userRepo.getUsageSummary();
     //const result = await userRepo.
 };
 

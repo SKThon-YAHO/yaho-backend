@@ -16,6 +16,37 @@ const getMyToilets = async (local_code) => {
     const { rows } = await pool.query(query, [local_code]);
     return rows;
 };
+// 당일/당월 x 전체/화장실별 이용자 수를 한 번에 집계 (메인 페이지 종합 정보용, 관리자 소속과 무관하게 전체 화장실 기준)
+const getUsageSummary = async () => {
+    const query = `
+        SELECT
+            t.toilet_code,
+            t.name,
+            COUNT(u.id) FILTER (WHERE u.created_at >= CURRENT_DATE) AS today_count,
+            COUNT(u.id) FILTER (WHERE u.created_at >= date_trunc('month', CURRENT_DATE)) AS month_count
+        FROM toilets t
+        LEFT JOIN toilet_usage_log u ON u.toilet_code = t.toilet_code
+        WHERE t.deleted_at IS NULL
+        GROUP BY t.toilet_code, t.name
+        ORDER BY t.name;
+    `;
+    const { rows } = await pool.query(query);
+
+    const perToilet = rows.map((row) => ({
+        toilet_code: row.toilet_code,
+        name: row.name,
+        today_count: Number(row.today_count),
+        month_count: Number(row.month_count),
+    }));
+
+    const todayTotal = perToilet.reduce((sum, t) => sum + t.today_count, 0);
+    const monthTotal = perToilet.reduce((sum, t) => sum + t.month_count, 0);
+
+    return {
+        today: { total: todayTotal, toilets: perToilet.map(({ toilet_code, name, today_count }) => ({ toilet_code, name, count: today_count })) },
+        month: { total: monthTotal, toilets: perToilet.map(({ toilet_code, name, month_count }) => ({ toilet_code, name, count: month_count })) },
+    };
+};
 
 // 방문(QR 스캔) 횟수 집계 — period: 'day' | 'week' | 'month'
 const PERIOD_INTERVALS = {
@@ -49,4 +80,5 @@ export {
     findByLocalCode,
     getMyToilets,
     getUsage,
+    getUsageSummary,
 };

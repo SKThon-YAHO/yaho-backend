@@ -16,9 +16,8 @@ router.get('/me', verifyToken, userController.getMyProfile);
 /**
  * @api-docgen
  * @tag Users
- * @summary 메인 페이지에서 띄울 종합 정보들
- * @res 200 { 작업 중 }
- * @res 404 LOCAL_CODE_NOT_FOUND
+ * @summary 메인 페이지에서 띄울 종합 정보들 (당일/당월 x 전체/화장실별 이용자 수)
+ * @res 200 { success: true, data: { today: { total: number, toilets: [{toilet_code, name, count}] }, month: { total: number, toilets: [...] } } }
  */
 router.get('/total', verifyToken, userController.getTotalData);
 
