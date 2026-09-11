@@ -56,7 +56,7 @@ router.get('/toilets/usage', verifyToken, userController.getUsage);
  * @res         survey : {
  * @res             clean: { toilet: number, urinal: number, sink: number, floor: number },
  * @res             break: { toilet: number, urinal: number, sink: number, door: number },
- * @res             item: { soap: number, paper: number }
+ * @res             item: { soap: number, paper: number, trash: number }
  * @res         }
  * @res     }]}
  */
