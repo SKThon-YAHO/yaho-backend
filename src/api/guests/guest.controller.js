@@ -1,5 +1,24 @@
 import * as guestService from './guest.service.js';
 
+const getRandomItem = async (req, res, next) => {
+    try {
+        const { uuid } = req.body;
+
+        if (!uuid) {
+            const error = new Error('Missing required fields.');
+            error.status = 400;
+            error.code = 'MISSING_REQUIRED_FIELDS';
+            throw error;
+        }
+
+        const data = await guestService.getRandomItem(uuid);
+
+        return res.status(200).json({ success: true, data: data});
+    } catch (error) {
+        next(error);
+    }
+}
+
 const LoggingUsage = async (req, res, next) => {
     try {
         const { uuid } = req.body;
@@ -40,4 +59,4 @@ const LoggingSurvey = async (req, res, next) => {
     }
 };
 
-export { LoggingUsage, LoggingSurvey };
+export { getRandomItem, LoggingUsage, LoggingSurvey };

@@ -6,6 +6,16 @@ const router = express.Router();
 /**
  * @api-docgen
  * @tag Guest
+ * @summary 랜덤 상품 추첨
+ * @req body { uuid: string }
+ * @res 200 { success: true, data: { item: string, item_number: string } }
+ * @res 400 MISSING_REQUIRED_FIELDS
+ */
+router.post('/random', guestController.getRandomItem);
+
+/**
+ * @api-docgen
+ * @tag Guest
  * @summary 화장실 이용량 카운트, 로컬 스토리지에 저장된 uuid가 없다면 쿼리 비워서 보내고, 반환된 uuid를 로컬스토리지에 저장 및 다음 요청 때 붙여서
  * @req body { uuid: string(nullable) }
  * @res 200 { success: true, data: { uuid: string } }

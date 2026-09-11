@@ -41,6 +41,30 @@ const IsValidSurvey = async (toilet_code, uuid) => {
     return !rows[0].exists;
 };
 
+const IsValidDraw = async (uuid) => {
+    const query = `
+        SELECT EXISTS (
+            SELECT 1
+            FROM draw_log
+            WHERE uuid = $1
+              AND created_at >= NOW() - INTERVAL '1 day'
+        ) AS exists
+    `;
+
+    const { rows } = await pool.query(query, [uuid]);
+
+    return !rows[0].exists;
+}
+
+const LoggingDrow = async (item, item_number, uuid) => {
+    const query = `
+        INSERT INTO draw_log (item, item_number, uuid)
+        VALUES ($1, $2, $3)
+    `;
+
+    await pool.query(query, [item, item_number, uuid]);
+}
+
 const LoggingSurvey = async (toilet_code, survey, uuid) => {
     const query = `
         INSERT INTO toilet_survey_log (toilet_code, survey, uuid)
@@ -54,5 +78,7 @@ export {
     IsValidUsage,
     LoggingUsage,
     IsValidSurvey,
-    LoggingSurvey
+    LoggingSurvey,
+    IsValidDraw,
+    LoggingDrow
 };

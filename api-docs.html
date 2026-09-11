@@ -403,10 +403,32 @@ item: { soap: number, paper: number, trash: number }
             
                 <details class="tag-group" open>
                     <summary class="tag-title">
-                        Guest <span class="route-count">2 endpoints</span>
+                        Guest <span class="route-count">3 endpoints</span>
                     </summary>
                     <div class="tag-content">
                         
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method post">POST</span>
+                            <code>/api/guest/random</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">랜덤 상품 추첨</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>body { uuid: string }</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { success: true, data: { item: string, item_number: string } }
+400 MISSING_REQUIRED_FIELDS</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
                     <div class="route-card">
                         <div class="route-header">
                             <span class="method post">POST</span>
