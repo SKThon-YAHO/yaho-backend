@@ -53,7 +53,7 @@ const IsValidDraw = async (uuid) => {
 
     const { rows } = await pool.query(query, [uuid]);
 
-    return !rows[0].exists;
+    return rows[0].exists;
 }
 
 const LoggingDrow = async (item, item_number, uuid) => {

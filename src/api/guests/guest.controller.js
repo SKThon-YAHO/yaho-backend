@@ -53,7 +53,7 @@ const LoggingSurvey = async (req, res, next) => {
 
         const result = await guestService.LoggingSurvey(toilet_code, survey, uuid);
 
-        return res.status(200).json({ success: true, is_valid: !result });
+        return res.status(200).json({ success: true, is_valid: result });
     } catch (error) {
         next(error);
     }
