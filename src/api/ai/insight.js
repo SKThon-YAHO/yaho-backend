@@ -4,10 +4,22 @@
 
 import anthropic from './client.js';
 
+// 한국 시간으로 사람이 읽기 편한 형식으로 변환 (예: "9월 11일 오후 3시 20분")
+const toKST = (isoString) => {
+    return new Date(isoString).toLocaleString('ko-KR', {
+        timeZone: 'Asia/Seoul',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+    });
+};
+
 const formatUsageLogs = (usageLogs) => {
     if (usageLogs.length === 0) return '(방문 기록 없음)';
     return usageLogs
-        .map((log) => `${log.name} | ${new Date(log.created_at).toISOString()}`)
+        .map((log) => `${log.name} | ${toKST(log.created_at)}`)
         .join('\n');
 };
 
@@ -21,7 +33,7 @@ const formatSurveyLogs = (surveyLogs) => {
             if (s.break) Object.entries(s.break).forEach(([k, v]) => v && issues.push(`break.${k}`));
             if (s.item) Object.entries(s.item).forEach(([k, v]) => v && issues.push(`item.${k}`));
             const issueText = issues.length > 0 ? issues.join(', ') : '이상없음';
-            return `${log.name} | ${new Date(log.created_at).toISOString()} | ${issueText}`;
+            return `${log.name} | ${toKST(log.created_at)} | ${issueText}`;
         })
         .join('\n');
 };
@@ -29,7 +41,7 @@ const formatSurveyLogs = (surveyLogs) => {
 const buildPrompt = (usageLogs, surveyLogs) => {
     return `
 당신은 공중화장실 관리 데이터를 분석해서 관리자에게 조언을 주는 어시스턴트입니다.
-아래는 이번 달 방문 기록과 설문(문제 신고) 기록의 원본 로그입니다. 각 줄은 "화장실명 | 시각(UTC) | 신고내용" 형식입니다.
+아래는 이번 달 방문 기록과 설문(문제 신고) 기록의 원본 로그입니다. 각 줄은 "화장실명 | 시각 | 신고내용" 형식입니다. 시각은 한국시간입니다.
 
 이 데이터를 보고 다음을 파악해서 한국어로 2~3문장짜리 인사이트를 작성하세요:
 1. 가장 시급한 문제가 무엇인지
@@ -43,6 +55,8 @@ const buildPrompt = (usageLogs, surveyLogs) => {
 - 불필요한 인사말, 서론 없이 바로 본문만 작성하세요.
 - 데이터가 너무 적으면 짧게 "아직 데이터가 적어요"라고만 말하세요.
 - 강조해야할 단어나 말은 중괄호안에 넣으세요.
+- 문장을 어린아이도 알아들을수 있을정도로 편하게 바꿔서 말하세요.
+- "UTC", "ISO", "타임존" 같은 기술 용어는 절대 언급하지 마세요. 그냥 "오후 3시"처럼 편하게 시간만 말하세요.
 
 [방문 로그]
 ${formatUsageLogs(usageLogs)}
@@ -51,7 +65,7 @@ ${formatUsageLogs(usageLogs)}
 ${formatSurveyLogs(surveyLogs)}
 
 [현재시각]
-${new Date().toISOString()}
+${toKST(new Date().toISOString())}
 `.trim();
 };
 

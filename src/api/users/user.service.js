@@ -1,4 +1,4 @@
-import { generateInsight } from '../ai/service.js';
+import { generateInsight } from '../ai/insight.js';
 import * as userRepo from './user.repository.js';
 
 const getProfile = async (local_code) => {
