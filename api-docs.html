@@ -477,7 +477,11 @@ uuid: string }</pre>
                             <div class="payload-container">
                                 <div class="payload-section">
                                     <div class="payload-title">Request</div>
-                                    <pre>body { cleaning_type: number }</pre>
+                                    <pre>body { cleaning_type: {
+clean: { toilet: bool, urinal: bool, sink: bool, floor: bool },
+break: { toilet: bool, urinal: bool, sink: bool, door: bool },
+item: { soap: bool, paper: bool, trash: bool }
+}}</pre>
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
