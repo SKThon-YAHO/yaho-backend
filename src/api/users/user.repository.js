@@ -48,6 +48,46 @@ const getUsageSummary = async () => {
     };
 };
 
+// 이번 달 설문 응답에서 항목별 불만족(true) 개수 집계
+const getMonthlySurveyStats = async () => {
+    const query = `
+        SELECT
+            COUNT(*) FILTER (WHERE (survey->'clean'->>'toilet')::boolean) AS clean_toilet,
+            COUNT(*) FILTER (WHERE (survey->'clean'->>'urinal')::boolean) AS clean_urinal,
+            COUNT(*) FILTER (WHERE (survey->'clean'->>'sink')::boolean) AS clean_sink,
+            COUNT(*) FILTER (WHERE (survey->'clean'->>'floor')::boolean) AS clean_floor,
+            COUNT(*) FILTER (WHERE (survey->'break'->>'toilet')::boolean) AS break_toilet,
+            COUNT(*) FILTER (WHERE (survey->'break'->>'urinal')::boolean) AS break_urinal,
+            COUNT(*) FILTER (WHERE (survey->'break'->>'sink')::boolean) AS break_sink,
+            COUNT(*) FILTER (WHERE (survey->'break'->>'door')::boolean) AS break_door,
+            COUNT(*) FILTER (WHERE (survey->'item'->>'soap')::boolean) AS item_soap,
+            COUNT(*) FILTER (WHERE (survey->'item'->>'paper')::boolean) AS item_paper
+        FROM toilet_survey_log
+        WHERE created_at >= date_trunc('month', CURRENT_DATE);
+    `;
+    const { rows } = await pool.query(query);
+    const r = rows[0];
+
+    return {
+        clean: {
+            toilet: Number(r.clean_toilet),
+            urinal: Number(r.clean_urinal),
+            sink: Number(r.clean_sink),
+            floor: Number(r.clean_floor),
+        },
+        break: {
+            toilet: Number(r.break_toilet),
+            urinal: Number(r.break_urinal),
+            sink: Number(r.break_sink),
+            door: Number(r.break_door),
+        },
+        item: {
+            soap: Number(r.item_soap),
+            paper: Number(r.item_paper),
+        },
+    };
+};
+
 // 방문(QR 스캔) 횟수 집계 — period: 'day' | 'week' | 'month'
 const PERIOD_INTERVALS = {
     day: '1 day',
@@ -81,4 +121,5 @@ export {
     getMyToilets,
     getUsage,
     getUsageSummary,
+    getMonthlySurveyStats,
 };

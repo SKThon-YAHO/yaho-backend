@@ -14,8 +14,10 @@ const getProfile = async (local_code) => {
 };
 
 const getTotalData = async (local_code) => {
-    return userRepo.getUsageSummary();
-    //const result = await userRepo.
+    const data1 = await userRepo.getUsageSummary();
+    const data2 = await userRepo.getMonthlySurveyStats();
+
+    return { 이용자: data1, 불만족: data2 };
 };
 
 const getMyToilets = async (local_code) => {
