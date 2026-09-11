@@ -25,7 +25,7 @@ const LoggingUsage = async (toilet_code, uuid) => {
     await pool.query(query, [toilet_code, uuid || null]);
 }
 
-const IsValidSurvey = async (toilet_code, survey, uuid) => {
+const IsValidSurvey = async (toilet_code, uuid) => {
     const query = `
         SELECT EXISTS (
             SELECT 1
@@ -44,10 +44,10 @@ const IsValidSurvey = async (toilet_code, survey, uuid) => {
 const LoggingSurvey = async (toilet_code, survey, uuid) => {
     const query = `
         INSERT INTO toilet_survey_log (toilet_code, survey, uuid)
-        VALUES ($1, $2, $3)
+        VALUES ($1, $2::jsonb, $3)
     `;
 
-    await pool.query(query, [toilet_code, survey, uuid]);
+    await pool.query(query, [toilet_code, JSON.stringify(survey ?? {}), uuid ?? null]);
 }
 
 export { 

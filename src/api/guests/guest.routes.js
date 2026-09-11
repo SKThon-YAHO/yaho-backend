@@ -16,8 +16,14 @@ router.post('/:toilet_code/usage', guestController.LoggingUsage);
 /**
  * @api-docgen
  * @tag Guest
- * @summary 설문 라우트 survey는 아무것도 체크 안 함 -> 0, 청결도만 체크 -> 1, 비품만 체크 -> 2, 전부 체크 -> 3 으로 세팅
- * @req body { survey: int, uuid: string }
+ * @summary 설문 라우트 각 품목별로 부족한 것이 true(체크한 것) 문제 없는 것이 false(체크 안 한 것)임
+ * @req body { 
+ * @req     survey: { 
+ * @req         clean: { toilet: bool, urinal: bool, sink: bool, floor: bool },
+ * @req         break: { toilet: bool, urinal: bool, sink: bool, door: bool },
+ * @req         item: { soap: bool, paper: bool }
+ * @req     },
+ * @req uuid: string }
  * @res 200 { success: true }
  * @res 400 MISSING_REQUIRED_FIELDS
  */
