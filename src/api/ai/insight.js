@@ -1,10 +1,9 @@
 // src/ai/insight.js
-// 목적: 화장실 방문/설문 원본 로그(타임스탬프 포함)를 Claude API에 넘겨서
+// 목적: 화장실 방문/설문 원본 로그(타임스탬프 포함)를 Gemini API에 넘겨서
 //       시간대/요일 패턴까지 반영한 자연어 인사이트를 생성
 
-import anthropic from './client.js';
+import genAI from './client.js';
 
-// 한국 시간으로 사람이 읽기 편한 형식으로 변환 (예: "9월 11일 오후 3시 20분")
 const toKST = (isoString) => {
     return new Date(isoString).toLocaleString('ko-KR', {
         timeZone: 'Asia/Seoul',
@@ -16,14 +15,6 @@ const toKST = (isoString) => {
     });
 };
 
-const formatUsageLogs = (usageLogs) => {
-    if (usageLogs.length === 0) return '(방문 기록 없음)';
-    return usageLogs
-        .map((log) => `${log.name} | ${toKST(log.created_at)}`)
-        .join('\n');
-};
-
-// clean/break/item 필드 코드를 한글 라벨로 변환 (AI가 영어 코드를 그대로 따라 쓰는 걸 방지)
 const ISSUE_LABELS = {
     'clean.toilet': '대변기 청결불량',
     'clean.urinal': '소변기 청결불량',
@@ -36,6 +27,13 @@ const ISSUE_LABELS = {
     'item.soap': '손세정제 부족',
     'item.paper': '휴지 부족',
     'item.trash': '쓰레기통 문제',
+};
+
+const formatUsageLogs = (usageLogs) => {
+    if (usageLogs.length === 0) return '(방문 기록 없음)';
+    return usageLogs
+        .map((log) => `${log.name} | ${toKST(log.created_at)}`)
+        .join('\n');
 };
 
 const formatSurveyLogs = (surveyLogs) => {
@@ -73,7 +71,7 @@ const buildPrompt = (usageLogs, surveyLogs) => {
 - 문장을 어린아이도 알아들을수 있을정도로 편하게 바꿔서 말하세요.
 - "UTC", "ISO", "타임존" 같은 기술 용어는 절대 언급하지 마세요. 그냥 "오후 3시"처럼 편하게 시간만 말하세요.
 - "clean.toilet", "break.door" 같은 영어 필드 코드는 절대 쓰지 마세요. 항상 한글 이름으로만 말하세요.
-- "분산", "패턴", "트렌드", "지표", "분석", "경향", "데이터" 같은 통계/분석 용어는 쓰지 마세요. 쉬운 말로 바꾸거나, 굳이 필요 없으면 그냥 빼세요. (예: "방문이 몰리는 패턴이 보여요" 대신 "이 시간에 사람이 많이 와요")
+- "분산", "패턴", "트렌드", "지표", "분석", "경향", "데이터" 같은 통계/분석 용어는 쓰지 마세요. 쉬운 말로 바꾸거나, 굳이 필요 없으면 그냥 빼세요.
 
 [방문 로그]
 ${formatUsageLogs(usageLogs)}
@@ -89,14 +87,16 @@ ${toKST(new Date().toISOString())}
 const generateInsight = async (usageLogs, surveyLogs) => {
     const prompt = buildPrompt(usageLogs, surveyLogs);
 
-    const message = await anthropic.messages.create({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 300,
-        messages: [{ role: 'user', content: prompt }],
-    });
-
-    const textBlock = message.content.find((block) => block.type === 'text');
-    return textBlock ? textBlock.text : '';
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        const result = await model.generateContent(prompt);
+        return result.response.text();
+    } catch (err) {
+        const error = new Error('AI 응답 생성에 실패했습니다.');
+        error.status = 504;
+        error.code = 'AI_REQUEST_FAILED';
+        throw error;
+    }
 };
 
 export { generateInsight };
