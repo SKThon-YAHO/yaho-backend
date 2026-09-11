@@ -280,10 +280,10 @@
                     <div class="route-card">
                         <div class="route-header">
                             <span class="method get">GET</span>
-                            <code>/api/users/dashboard</code>
+                            <code>/api/users/total</code>
                         </div>
                         <div class="route-body">
-                            <div class="summary-text">Get dashboard stats for manager's toilets (cleaning-needed badges)</div>
+                            <div class="summary-text">메인 페이지에서 띄울 종합 정보들 (당일/당월 x 전체/화장실별 이용자 수 + 이번 달 설문 항목별 불만족 수)</div>
                             
                             <div class="payload-container">
                                 <div class="payload-section">
@@ -292,7 +292,7 @@
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
-                                    <pre>200 { success: true, data: [{ toilet_code, name, locate, total_count, dirty_count, supply_count, needsCleaning }] }</pre>
+                                    <pre>200 { success: true, data: {</pre>
                                 </div>
                             </div>
                         </div>
