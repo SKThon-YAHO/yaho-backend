@@ -34,7 +34,7 @@ const getRandomItem = async (uuid) => {
         if (selected_item !== 'empty') {
             item_number = '';
             for (let i = 0; i < 16; i++) {
-                item_number += Math.floor(Math.random() * 10);
+                item_number += String(Math.floor(Math.random() * 10));
             }
         }
         
@@ -48,7 +48,7 @@ const getRandomItem = async (uuid) => {
     else {
         return {
             item: "none",
-            item_number: 1
+            item_number: "1"
         }
     }
 };
