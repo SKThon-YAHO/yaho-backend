@@ -28,4 +28,8 @@ const getUsage = async (local_code) => {
     return userRepo.getUsage(local_code);
 };
 
-export { getProfile, getTotalData, getMyToilets, getUsage };
+const getSurvey = async (local_code) => {
+    return userRepo.getSurvey(local_code);
+}
+
+export { getProfile, getTotalData, getMyToilets, getUsage, getSurvey };

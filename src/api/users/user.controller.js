@@ -47,4 +47,16 @@ const getUsage = async (req, res, next) => {
     }
 };
 
-export { getMyProfile, getTotalData, getMyToilets, getUsage };
+const getSurvey = async (req, res, next) => {
+    try {
+        const local_code = req.user.local_code;
+
+        const survey = await userService.getSurvey(local_code);
+
+        return res.status(200).json({ success: true, data: survey });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export { getMyProfile, getTotalData, getMyToilets, getUsage, getSurvey };

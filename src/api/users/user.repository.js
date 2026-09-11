@@ -90,20 +90,78 @@ const getMonthlySurveyStats = async (local_code) => {
     };
 };
 
+// 이번 달 설문 응답을 화장실별로 나눠서 항목별 불만족(true) 개수 집계 (local_code로 관리하는 화장실만)
+const getSurvey = async (local_code) => {
+    const query = `
+        SELECT
+            t.toilet_code,
+            t.name,
+            COUNT(*) FILTER (WHERE (s.survey->'clean'->>'toilet')::boolean) AS clean_toilet,
+            COUNT(*) FILTER (WHERE (s.survey->'clean'->>'urinal')::boolean) AS clean_urinal,
+            COUNT(*) FILTER (WHERE (s.survey->'clean'->>'sink')::boolean) AS clean_sink,
+            COUNT(*) FILTER (WHERE (s.survey->'clean'->>'floor')::boolean) AS clean_floor,
+            COUNT(*) FILTER (WHERE (s.survey->'break'->>'toilet')::boolean) AS break_toilet,
+            COUNT(*) FILTER (WHERE (s.survey->'break'->>'urinal')::boolean) AS break_urinal,
+            COUNT(*) FILTER (WHERE (s.survey->'break'->>'sink')::boolean) AS break_sink,
+            COUNT(*) FILTER (WHERE (s.survey->'break'->>'door')::boolean) AS break_door,
+            COUNT(*) FILTER (WHERE (s.survey->'item'->>'soap')::boolean) AS item_soap,
+            COUNT(*) FILTER (WHERE (s.survey->'item'->>'paper')::boolean) AS item_paper
+        FROM toilets t
+        LEFT JOIN toilet_survey_log s
+            ON s.toilet_code = t.toilet_code
+            AND s.created_at >= date_trunc('month', CURRENT_DATE)
+        WHERE t.local_code = $1 AND t.deleted_at IS NULL
+        GROUP BY t.toilet_code, t.name
+        ORDER BY t.name;
+    `;
+    const { rows } = await pool.query(query, [local_code]);
+
+    return rows.map((r) => ({
+        toilet_code: r.toilet_code,
+        name: r.name,
+        survey: {
+            clean: {
+                toilet: Number(r.clean_toilet),
+                urinal: Number(r.clean_urinal),
+                sink: Number(r.clean_sink),
+                floor: Number(r.clean_floor),
+            },
+            break: {
+                toilet: Number(r.break_toilet),
+                urinal: Number(r.break_urinal),
+                sink: Number(r.break_sink),
+                door: Number(r.break_door),
+            },
+            item: {
+                soap: Number(r.item_soap),
+                paper: Number(r.item_paper),
+            },
+        },
+    }));
+};
+
 
 const getUsage = async (local_code) => {
     const query = `
-        SELECT t.toilet_code, t.name, COUNT(u.id) AS visit_count
+        SELECT
+            t.toilet_code,
+            t.name,
+            COUNT(u.id) FILTER (WHERE u.created_at >= CURRENT_DATE) AS today_count,
+            COUNT(u.id) FILTER (WHERE u.created_at >= date_trunc('month', CURRENT_DATE)) AS month_count
         FROM toilets t
-        LEFT JOIN toilet_usage_log u
-            ON u.toilet_code = t.toilet_code
-            AND u.created_at >= now() - INTERVAL '${interval}'
+        LEFT JOIN toilet_usage_log u ON u.toilet_code = t.toilet_code
         WHERE t.local_code = $1 AND t.deleted_at IS NULL
         GROUP BY t.toilet_code, t.name
-        ORDER BY visit_count DESC;
+        ORDER BY t.name;
     `;
     const { rows } = await pool.query(query, [local_code]);
-    return rows;
+
+    return rows.map((row) => ({
+        toilet_code: row.toilet_code,
+        name: row.name,
+        today_count: Number(row.today_count),
+        month_count: Number(row.month_count),
+    }));
 };
 
 export {
@@ -112,4 +170,5 @@ export {
     getUsage,
     getUsageSummary,
     getMonthlySurveyStats,
+    getSurvey
 };
