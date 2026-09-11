@@ -251,7 +251,7 @@
             
                 <details class="tag-group" open>
                     <summary class="tag-title">
-                        Users <span class="route-count">4 endpoints</span>
+                        Users <span class="route-count">5 endpoints</span>
                     </summary>
                     <div class="tag-content">
                         
@@ -292,7 +292,14 @@
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
-                                    <pre>200 { success: true, data: {</pre>
+                                    <pre>200 { success: true, data: {
+usage: { today: { total: number, toilets: [{toilet_code, name, count}] }, month: { total: number, toilets: [...] } },
+survey : {
+clean: { toilet: number, urinal: number, sink: number, floor: number },
+break: { toilet: number, urinal: number, sink: number, door: number },
+item: { soap: number, paper: number }
+}
+} }</pre>
                                 </div>
                             </div>
                         </div>
@@ -335,6 +342,36 @@
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
                                     <pre>200 { success: true, data: [{ toilet_code, name, visit_count }] }</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="route-card">
+                        <div class="route-header">
+                            <span class="method get">GET</span>
+                            <code>/api/users/toilets/survey</code>
+                        </div>
+                        <div class="route-body">
+                            <div class="summary-text">이번달 각화장실 별 설문 결과 반환</div>
+                            
+                            <div class="payload-container">
+                                <div class="payload-section">
+                                    <div class="payload-title">Request</div>
+                                    <pre>None</pre>
+                                </div>
+                                <div class="payload-section">
+                                    <div class="payload-title">Response</div>
+                                    <pre>200 { success: true,
+data:
+[{ toilet_code,
+name,
+survey : {
+clean: { toilet: number, urinal: number, sink: number, floor: number },
+break: { toilet: number, urinal: number, sink: number, door: number },
+item: { soap: number, paper: number, trash: number }
+}
+}]}</pre>
                                 </div>
                             </div>
                         </div>
