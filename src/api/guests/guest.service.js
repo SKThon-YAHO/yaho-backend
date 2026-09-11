@@ -38,7 +38,7 @@ const getRandomItem = async (uuid) => {
             }
         }
         
-        await guestRepo.LoggingDrow(selected_item, item_number, uuid);
+        await guestRepo.LoggingDraw(selected_item, item_number, uuid);
 
         return { 
             item: selected_item, 

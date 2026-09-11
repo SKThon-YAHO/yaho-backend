@@ -53,10 +53,10 @@ const IsValidDraw = async (uuid) => {
 
     const { rows } = await pool.query(query, [uuid]);
 
-    return rows[0].exists;
+    return !rows[0].exists;
 }
 
-const LoggingDrow = async (item, item_number, uuid) => {
+const LoggingDraw = async (item, item_number, uuid) => {
     const query = `
         INSERT INTO draw_log (item, item_number, uuid)
         VALUES ($1, $2, $3)
@@ -80,5 +80,5 @@ export {
     IsValidSurvey,
     LoggingSurvey,
     IsValidDraw,
-    LoggingDrow
+    LoggingDraw
 };
