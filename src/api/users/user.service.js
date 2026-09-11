@@ -1,3 +1,4 @@
+import { generateInsight } from '../../ai/insight.js';
 import * as userRepo from './user.repository.js';
 
 const getProfile = async (local_code) => {
@@ -32,4 +33,12 @@ const getSurvey = async (local_code) => {
     return userRepo.getSurvey(local_code);
 }
 
-export { getProfile, getTotalData, getMyToilets, getUsage, getSurvey };
+const getInsights = async (local_code) => {
+    const { usageLogs, surveyLogs } = await userRepo.getRawLogsForInsight(local_code);
+
+    const insight = await generateInsight(usageLogs, surveyLogs);
+
+    return { insight, usageCount: usageLogs.length, surveyCount: surveyLogs.length };
+};
+
+export { getProfile, getTotalData, getMyToilets, getUsage, getSurvey, getInsights };

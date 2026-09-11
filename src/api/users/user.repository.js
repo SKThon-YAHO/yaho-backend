@@ -169,11 +169,42 @@ const getUsage = async (local_code) => {
     }));
 };
 
+const getRawLogsForInsight = async (local_code) => {
+    const usageQuery = `
+        SELECT t.toilet_code, t.name, u.created_at
+        FROM toilet_usage_log u
+        JOIN toilets t ON t.toilet_code = u.toilet_code
+        WHERE t.local_code = $1
+          AND u.created_at >= date_trunc('month', CURRENT_DATE)
+        ORDER BY u.created_at DESC
+        LIMIT 500;
+    `;
+    const surveyQuery = `
+        SELECT t.toilet_code, t.name, s.survey, s.created_at
+        FROM toilet_survey_log s
+        JOIN toilets t ON t.toilet_code = s.toilet_code
+        WHERE t.local_code = $1
+          AND s.created_at >= date_trunc('month', CURRENT_DATE)
+        ORDER BY s.created_at DESC
+        LIMIT 500;
+    `;
+
+    const [usageResult, surveyResult] = await Promise.all([
+        pool.query(usageQuery, [local_code]),
+        pool.query(surveyQuery, [local_code]),
+    ]);
+
+    return {
+        usageLogs: usageResult.rows, // [{ toilet_code, name, created_at }]
+        surveyLogs: surveyResult.rows, // [{ toilet_code, name, survey, created_at }]
+    };
+};
 export {
     findByLocalCode,
     getMyToilets,
     getUsage,
     getUsageSummary,
     getMonthlySurveyStats,
-    getSurvey
+    getSurvey,
+    getRawLogsForInsight
 };
