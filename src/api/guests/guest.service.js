@@ -38,13 +38,19 @@ const getRandomItem = async (uuid) => {
             }
         }
         
-        await guestRepo.LoggingDrow(item, item_number, uuid);
-    }
+        await guestRepo.LoggingDrow(selected_item, item_number, uuid);
 
-    return { 
-        item: selected_item, 
-        item_number 
-    };
+        return { 
+            item: selected_item, 
+            item_number 
+        };
+    }
+    else {
+        return {
+            item: "none",
+            item_number: 1
+        }
+    }
 };
 
 const LoggingUsage = async (toilet_code, uuid) => {
