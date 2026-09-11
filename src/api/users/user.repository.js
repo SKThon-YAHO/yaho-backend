@@ -61,7 +61,8 @@ const getMonthlySurveyStats = async (local_code) => {
             COUNT(*) FILTER (WHERE (s.survey->'break'->>'sink')::boolean) AS break_sink,
             COUNT(*) FILTER (WHERE (s.survey->'break'->>'door')::boolean) AS break_door,
             COUNT(*) FILTER (WHERE (s.survey->'item'->>'soap')::boolean) AS item_soap,
-            COUNT(*) FILTER (WHERE (s.survey->'item'->>'paper')::boolean) AS item_paper
+            COUNT(*) FILTER (WHERE (s.survey->'item'->>'paper')::boolean) AS item_paper,
+            COUNT(*) FILTER (WHERE (s.survey->'item'->>'trash')::boolean) AS item_trash
         FROM toilet_survey_log s
         JOIN toilets t ON t.toilet_code = s.toilet_code
         WHERE t.local_code = $1
@@ -86,6 +87,8 @@ const getMonthlySurveyStats = async (local_code) => {
         item: {
             soap: Number(r.item_soap),
             paper: Number(r.item_paper),
+            trash: Number(r.item_trash),
+
         },
     };
 };
