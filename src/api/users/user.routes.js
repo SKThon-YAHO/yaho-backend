@@ -18,8 +18,8 @@ router.get('/me', verifyToken, userController.getMyProfile);
  * @tag Users
  * @summary 메인 페이지에서 띄울 종합 정보들 (당일/당월 x 전체/화장실별 이용자 수 + 이번 달 설문 항목별 불만족 수)
  * @res 200 { success: true, data: {
- *   이용자: { today: { total: number, toilets: [{toilet_code, name, count}] }, month: { total: number, toilets: [...] } },
- *   불만족: {
+ *   usage: { today: { total: number, toilets: [{toilet_code, name, count}] }, month: { total: number, toilets: [...] } },
+ *   survey : {
  *     clean: { toilet: number, urinal: number, sink: number, floor: number },
  *     break: { toilet: number, urinal: number, sink: number, door: number },
  *     item: { soap: number, paper: number }
