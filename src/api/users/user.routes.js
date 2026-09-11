@@ -40,10 +40,9 @@ router.get('/toilets', verifyToken, userController.getMyToilets);
  * @api-docgen
  * @tag Users
  * @summary Get visit count per toilet for daily montly 
- * @res 200 { success: true, data: [{ toilet_code, name, visit_count }] }
+ * @res 200 { success: true, data: [{ toilet_code, name, today_count, month_count }] }
  */
 router.get('/toilets/usage', verifyToken, userController.getUsage);
-
 
 /**
  * @api-docgen
