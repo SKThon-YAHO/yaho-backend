@@ -27,9 +27,11 @@ const LoggingUsage = async (toilet_code, uuid) => {
 const LoggingSurvey = async (toilet_code, survey, uuid) => {
     const is_valid = await guestRepo.IsValidSurvey(toilet_code, uuid);
 
-    if (!is_valid) return;
+    if (!is_valid) return false;
 
     await guestRepo.LoggingSurvey(toilet_code, survey, uuid);
+
+    return true;
 }
 
 export { LoggingUsage, LoggingSurvey };

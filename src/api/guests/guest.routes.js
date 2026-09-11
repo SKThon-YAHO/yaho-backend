@@ -16,7 +16,7 @@ router.post('/:toilet_code/usage', guestController.LoggingUsage);
 /**
  * @api-docgen
  * @tag Guest
- * @summary 설문 라우트 각 품목별로 부족한 것이 true(체크한 것) 문제 없는 것이 false(체크 안 한 것)임
+ * @summary 설문 라우트 각 품목별로 부족한 것이 true(체크한 것) 문제 없는 것이 false(체크 안 한 것)임 / is_valid가 true일 때는 랜덤박스, false면 바로 종료
  * @req body { 
  * @req     survey: { 
  * @req         clean: { toilet: bool, urinal: bool, sink: bool, floor: bool },
@@ -24,7 +24,7 @@ router.post('/:toilet_code/usage', guestController.LoggingUsage);
  * @req         item: { soap: bool, paper: bool, trash: bool }
  * @req     },
  * @req uuid: string }
- * @res 200 { success: true }
+ * @res 200 { success: true, is_valid: bool }
  * @res 400 MISSING_REQUIRED_FIELDS
  */
 router.post('/:toilet_code/survey', guestController.LoggingSurvey);

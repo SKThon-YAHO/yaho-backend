@@ -32,9 +32,9 @@ const LoggingSurvey = async (req, res, next) => {
             throw error;
         }
 
-        await guestService.LoggingSurvey(toilet_code, survey, uuid);
+        const result = await guestService.LoggingSurvey(toilet_code, survey, uuid);
 
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ success: true, is_valid: result });
     } catch (error) {
         next(error);
     }
