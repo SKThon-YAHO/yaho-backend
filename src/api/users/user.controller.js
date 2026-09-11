@@ -12,13 +12,13 @@ const getMyProfile = async (req, res, next) => {
     }
 };
 
-const getDashboard = async (req, res, next) => {
+const getTotalData = async (req, res, next) => {
     try {
         const local_code = req.user.local_code;
 
-        const dashboard = await userService.getDashboard(local_code);
+        const data = await userService.getTotalData(local_code);
 
-        return res.status(200).json({ success: true, data: dashboard });
+        return res.status(200).json({ success: true, data: data});
     } catch (error) {
         next(error);
     }
@@ -54,4 +54,4 @@ const getUsage = async (req, res, next) => {
     }
 };
 
-export { getMyProfile, getDashboard, getMyToilets, getUsage };
+export { getMyProfile, getTotalData, getMyToilets, getUsage };

@@ -16,10 +16,11 @@ router.get('/me', verifyToken, userController.getMyProfile);
 /**
  * @api-docgen
  * @tag Users
- * @summary Get dashboard stats for manager's toilets (cleaning-needed badges)
- * @res 200 { success: true, data: [{ toilet_code, name, locate, total_count, dirty_count, supply_count, needsCleaning }] }
+ * @summary 메인 페이지에서 띄울 종합 정보들
+ * @res 200 { 작업 중 }
+ * @res 404 LOCAL_CODE_NOT_FOUND
  */
-router.get('/dashboard', verifyToken, userController.getDashboard);
+router.get('/total', verifyToken, userController.getTotalData);
 
 /**
  * @api-docgen

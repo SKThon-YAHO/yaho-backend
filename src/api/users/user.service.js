@@ -13,14 +13,8 @@ const getProfile = async (local_code) => {
     return { local_code: result.local_code, num_toilet: result.num_toilet, role: result.role };
 };
 
-const getDashboard = async (local_code) => {
-    const stats = await userRepo.getDashboardStats(local_code);
-
-    // 각 화장실에 청소 필요 여부 배지 붙이기
-    return stats.map((row) => ({
-        ...row,
-        needsCleaning: row.dirty_count > 0 || row.supply_count > 0,
-    }));
+const getTotalData = async (local_code) => {
+    //const result = await userRepo.
 };
 
 const getMyToilets = async (local_code) => {
@@ -31,4 +25,4 @@ const getUsage = async (local_code, period) => {
     return userRepo.getUsage(local_code, period);
 };
 
-export { getProfile, getDashboard, getMyToilets, getUsage };
+export { getProfile, getTotalData, getMyToilets, getUsage };

@@ -17,30 +17,6 @@ const getMyToilets = async (local_code) => {
     return rows;
 };
 
-// 화장실별 "마지막 청소 이후" 설문 집계 — survey: 0=양호, 1=청결불량, 2=비품부족, 3=둘다
-// last_cleaning이 없으면(한번도 청소 안 한 화장실) 전체 기간 집계
-const getDashboardStats = async (local_code) => {
-    const query = `
-        SELECT
-            t.toilet_code,
-            t.name,
-            t.locate,
-            t.last_cleaning,
-            COUNT(s.id) AS total_count,
-            COUNT(s.id) FILTER (WHERE s.survey IN (1, 3)) AS dirty_count,
-            COUNT(s.id) FILTER (WHERE s.survey IN (2, 3)) AS supply_count
-        FROM toilets t
-        LEFT JOIN toilet_survey_log s
-            ON s.toilet_code = t.toilet_code
-            AND (t.last_cleaning IS NULL OR s.created_at > t.last_cleaning)
-        WHERE t.local_code = $1 AND t.deleted_at IS NULL
-        GROUP BY t.toilet_code, t.name, t.locate, t.last_cleaning
-        ORDER BY dirty_count DESC, supply_count DESC;
-    `;
-    const { rows } = await pool.query(query, [local_code]);
-    return rows;
-};
-
 // 방문(QR 스캔) 횟수 집계 — period: 'day' | 'week' | 'month'
 const PERIOD_INTERVALS = {
     day: '1 day',
@@ -72,6 +48,5 @@ const getUsage = async (local_code, period) => {
 export {
     findByLocalCode,
     getMyToilets,
-    getDashboardStats,
     getUsage,
 };
