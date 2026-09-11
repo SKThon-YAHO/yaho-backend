@@ -435,7 +435,7 @@ item: { soap: number, paper: number, trash: number }
                             <code>/api/guest/:toilet_code/survey</code>
                         </div>
                         <div class="route-body">
-                            <div class="summary-text">설문 라우트 각 품목별로 부족한 것이 true(체크한 것) 문제 없는 것이 false(체크 안 한 것)임</div>
+                            <div class="summary-text">설문 라우트 각 품목별로 부족한 것이 true(체크한 것) 문제 없는 것이 false(체크 안 한 것)임 / is_valid가 true일 때는 랜덤박스, false면 바로 종료</div>
                             
                             <div class="payload-container">
                                 <div class="payload-section">
@@ -450,7 +450,7 @@ uuid: string }</pre>
                                 </div>
                                 <div class="payload-section">
                                     <div class="payload-title">Response</div>
-                                    <pre>200 { success: true }
+                                    <pre>200 { success: true, is_valid: bool }
 400 MISSING_REQUIRED_FIELDS</pre>
                                 </div>
                             </div>
