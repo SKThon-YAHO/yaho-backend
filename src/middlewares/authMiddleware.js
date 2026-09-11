@@ -14,8 +14,8 @@ const verifyToken = (req, res, next) => {
         const token = authHeader.split(' ')[1];
 
         if (token == "asdfasdf") {
-            req.user.local_code = "9999999";
-            req.user.role = "local";
+            req.user = { local_code: "9999999", role: "local" };
+
         }
         else {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
