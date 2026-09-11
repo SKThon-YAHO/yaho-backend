@@ -6,6 +6,7 @@ const addCleaningLog = async (local_code, toilet_code, cleaning_type) => {
         'SELECT 1 FROM toilets WHERE toilet_code = $1 AND local_code = $2 AND deleted_at IS NULL',
         [toilet_code, local_code]
     );
+
     if (ownerCheck.rows.length === 0) {
         const error = new Error('No permission to this toilet');
         error.status = 403;
@@ -13,11 +14,12 @@ const addCleaningLog = async (local_code, toilet_code, cleaning_type) => {
         throw error;
     }
 
-    const insertQuery = `
-        INSERT INTO toilet_cleaning_log (local_code, toilet_code, cleaning_type)
-        VALUES ($1, $2, $3)
+   const insertQuery = `
+    INSERT INTO toilet_cleaning_log (local_code, toilet_code, cleaning_type)
+    VALUES ($1, $2, $3::jsonb)
     `;
-    await pool.query(insertQuery, [local_code, toilet_code, cleaning_type]);
+    await pool.query(insertQuery, [local_code, toilet_code, JSON.stringify(cleaning_type ?? {}),
+]);
 
     // 청소 완료 시점을 toilets.last_cleaning에 반영 — 이걸 기준으로 다음번 대시보드 집계가 리셋됨
     await pool.query('UPDATE toilets SET last_cleaning = now() WHERE toilet_code = $1', [toilet_code]);
