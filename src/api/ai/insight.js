@@ -88,10 +88,11 @@ const generateInsight = async (usageLogs, surveyLogs) => {
     const prompt = buildPrompt(usageLogs, surveyLogs);
 
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-        const result = await model.generateContent(prompt);
+        const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
+        const result = await model.generateContent(prompt, { timeout: 15000 }); // 15초 넘으면 타임아웃
         return result.response.text();
     } catch (err) {
+        console.error('Gemini 호출 실패:', err.message); // Render Logs에서 실제 원인 확인 가능
         const error = new Error('AI 응답 생성에 실패했습니다.');
         error.status = 504;
         error.code = 'AI_REQUEST_FAILED';
