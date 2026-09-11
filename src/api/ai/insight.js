@@ -92,6 +92,15 @@ const generateInsight = async (usageLogs, surveyLogs) => {
         const result = await model.generateContent(prompt);
         return result.response.text();
     } catch (err) {
+        console.error('========== GEMINI API ERROR ==========');
+        console.error('Error:', err);
+        console.error('Message:', err?.message);
+        console.error('Status:', err?.status);
+        console.error('Status Code:', err?.statusCode);
+        console.error('Response:', err?.response);
+        console.error('Cause:', err?.cause);
+        console.error('======================================');
+
         const error = new Error('AI 응답 생성에 실패했습니다.');
         error.status = 504;
         error.code = 'AI_REQUEST_FAILED';
