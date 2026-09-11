@@ -23,15 +23,30 @@ const formatUsageLogs = (usageLogs) => {
         .join('\n');
 };
 
+// clean/break/item 필드 코드를 한글 라벨로 변환 (AI가 영어 코드를 그대로 따라 쓰는 걸 방지)
+const ISSUE_LABELS = {
+    'clean.toilet': '대변기 청결불량',
+    'clean.urinal': '소변기 청결불량',
+    'clean.sink': '세면대 청결불량',
+    'clean.floor': '바닥 청결불량',
+    'break.toilet': '대변기 고장',
+    'break.urinal': '소변기 고장',
+    'break.sink': '세면대 고장',
+    'break.door': '문 고장',
+    'item.soap': '손세정제 부족',
+    'item.paper': '휴지 부족',
+    'item.trash': '쓰레기통 문제',
+};
+
 const formatSurveyLogs = (surveyLogs) => {
     if (surveyLogs.length === 0) return '(설문 기록 없음)';
     return surveyLogs
         .map((log) => {
             const s = log.survey;
             const issues = [];
-            if (s.clean) Object.entries(s.clean).forEach(([k, v]) => v && issues.push(`clean.${k}`));
-            if (s.break) Object.entries(s.break).forEach(([k, v]) => v && issues.push(`break.${k}`));
-            if (s.item) Object.entries(s.item).forEach(([k, v]) => v && issues.push(`item.${k}`));
+            if (s.clean) Object.entries(s.clean).forEach(([k, v]) => v && issues.push(ISSUE_LABELS[`clean.${k}`] ?? `clean.${k}`));
+            if (s.break) Object.entries(s.break).forEach(([k, v]) => v && issues.push(ISSUE_LABELS[`break.${k}`] ?? `break.${k}`));
+            if (s.item) Object.entries(s.item).forEach(([k, v]) => v && issues.push(ISSUE_LABELS[`item.${k}`] ?? `item.${k}`));
             const issueText = issues.length > 0 ? issues.join(', ') : '이상없음';
             return `${log.name} | ${toKST(log.created_at)} | ${issueText}`;
         })
@@ -57,6 +72,8 @@ const buildPrompt = (usageLogs, surveyLogs) => {
 - 강조해야할 단어나 말은 중괄호안에 넣으세요.
 - 문장을 어린아이도 알아들을수 있을정도로 편하게 바꿔서 말하세요.
 - "UTC", "ISO", "타임존" 같은 기술 용어는 절대 언급하지 마세요. 그냥 "오후 3시"처럼 편하게 시간만 말하세요.
+- "clean.toilet", "break.door" 같은 영어 필드 코드는 절대 쓰지 마세요. 항상 한글 이름으로만 말하세요.
+- "분산", "패턴", "트렌드", "지표", "분석", "경향", "데이터" 같은 통계/분석 용어는 쓰지 마세요. 쉬운 말로 바꾸거나, 굳이 필요 없으면 그냥 빼세요. (예: "방문이 몰리는 패턴이 보여요" 대신 "이 시간에 사람이 많이 와요")
 
 [방문 로그]
 ${formatUsageLogs(usageLogs)}
