@@ -68,7 +68,7 @@ router.get('/toilets/survey', verifyToken, userController.getSurvey);
  * @summary AI가 이번 달 방문/설문 원본 로그를 분석해서 생성한 인사이트 문장 반환
  * @res 200 { success: true, data: { insight: string, usageCount: number, surveyCount: number } }
  */
-router.get('/insights', verifyToken, userController.getInsights);
+//router.get('/insights', verifyToken, userController.getInsights);
 
 export default router;
 
