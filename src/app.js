@@ -16,14 +16,9 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8080;
 
-
-const allowedOrigins = process.env.CORS_ORIGIN
-    .split(",")
-    .map(origin => origin.trim());
-
 // CORS configuration
 const corsOptions = {
-    origin: allowedOrigins,
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     optionsSuccessStatus: 200
 };
 
